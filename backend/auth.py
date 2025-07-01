@@ -24,6 +24,7 @@ oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth/token")
 
 class CreateUserRequest(BaseModel):
     username: str
+    email: str
     password: str
     
 class Token(BaseModel):
@@ -44,10 +45,12 @@ async def create_user(db: db_dependency,
                       create_user_request: CreateUserRequest):
     create_user_model = Users(
         username=create_user_request.username,
+        email=create_user_request.email,
         hashed_password=bcrypt_context.hash(create_user_request.password),
     )
     db.add(create_user_model)
     db.commit()
+    return {"message": "User created successfully."}
 
 @router.post("/token", response_model=Token)
 async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
