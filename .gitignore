@@ -60,7 +60,9 @@ cover/
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
-yano.db
+
+# DB stuff:
+*.db
 
 # Flask stuff:
 instance/

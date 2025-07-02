@@ -1,19 +1,10 @@
-import React from "react";
+import Notes from "./Notes";
+import Welcome from "./Welcome";
 
-function Home({ username, onLogout }) {
+function Home({ token }) {
   return (
     <div>
-      {username ? (
-        <>
-          <h2>Welcome {username}!</h2>
-          <button onClick={onLogout}>Logout</button>
-        </>
-      ) : (
-        <>
-          <p>Welcome!</p>
-          <p>Please log in or register.</p>
-        </>
-      )}
+      {token ? <Notes token={token} /> : <Welcome />}
     </div>
   );
 }

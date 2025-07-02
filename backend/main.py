@@ -1,15 +1,18 @@
 import uvicorn
 from fastapi import FastAPI, status, Depends, HTTPException
-import models
 from database import engine, SessionLocal
 from typing import Annotated
 from sqlalchemy.orm import Session
-import auth
-from auth import get_current_user
 from fastapi.middleware.cors import CORSMiddleware
+import auth
+import notes
+from auth import get_current_user, router
+import models
+from notes import router
 
 app = FastAPI()
 app.include_router(auth.router)
+app.include_router(notes.router)
 
 models.Base.metadata.create_all(bind=engine)
 
