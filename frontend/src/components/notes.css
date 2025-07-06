@@ -1,0 +1,120 @@
+/* notes.css */
+.notes-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 2rem;
+}
+
+.note-card {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 300px;
+  padding: 1.5rem;
+  position: relative;
+  transition: transform 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.note-card:hover {
+  transform: translateY(-5px);
+}
+
+.note-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  word-wrap: break-word;
+  color: #444;
+}
+
+.note-content {
+  font-size: 1rem;
+  color: #444;
+  word-wrap: break-word;
+  flex-grow: 1;
+  max-height: 180px;
+  overflow-y: auto;    /* allow vertical scroll when content exceeds */
+  padding-right: 0.5rem; /* space for scrollbar */
+}
+
+.note-actions {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: none;
+  gap: 0;
+}
+
+.note-card:hover .note-actions {
+  display: flex;
+}
+
+.delete-btn,
+.pin-btn {
+  padding: 5px;
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #999;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.delete-btn:hover {
+  color: red;
+  transform: scale(1.2);
+}
+
+.pin-btn:hover {
+  color: goldenrod;
+  transform: scale(1.2);
+}
+
+/* badge for pinned notes */
+.pinned-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: goldenrod;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+/* Form Styling */
+.notes-form {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.notes-form textarea,
+.notes-form input[type="text"] {
+  border-radius: 8px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  resize: none;
+  width: 300px;
+  margin-bottom: 0.5rem;
+}
+
+.notes-form button {
+  margin-top: 0.5rem;
+  padding: 8px 16px;
+  border-radius: 6px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.notes-form button:hover {
+  background-color: #45a049;
+}
+

@@ -1,21 +1,34 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import Notes from "./Notes";
+import Welcome from "./Welcome";
 
-function Home({ username, onLogout }) {
-  return (
-    <div>
-      {username ? (
-        <>
-          <h2>Welcome {username}!</h2>
-          <button onClick={onLogout}>Logout</button>
-        </>
-      ) : (
-        <>
-          <p>Welcome!</p>
-          <p>Please log in or register.</p>
-        </>
-      )}
-    </div>
-  );
+function Home() {
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/auth/me", {
+          credentials: "include", 
+        });
+        if (res.ok) {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+        }
+      } catch (err) {
+        setIsAuthenticated(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
+
+  if (isAuthenticated === null) {
+    return <p>Loading...</p>; // or a spinner
+  }
+
+  return <div>{isAuthenticated ? <Notes /> : <Welcome />}</div>;
 }
 
 export default Home;
