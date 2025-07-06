@@ -1,24 +1,24 @@
 import { useEffect, useState } from "react";
 import "./notes.css";
+import { useNavigate } from "react-router-dom";
 
-function Notes({ token }) {
+function Notes() {
   const [notes, setNotes] = useState([]);
   const [newTitle, setNewTitle] = useState("");
   const [newNote, setNewNote] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  // Fetch & sort notes on mount or token change
+  // Fetch notes
   useEffect(() => {
-    console.log("🔑 Notes.jsx token:", token);
     fetch("http://localhost:8000/notes/", {
-      headers: { Authorization: `Bearer ${token}` },
+      credentials: "include", // send cookie!
     })
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch notes.");
         return res.json();
       })
       .then((data) => {
-        // pinned first, ordered by pinned_at ascending
         const sorted = data.sort((a, b) => {
           if (a.pinned && b.pinned) {
             return new Date(a.pinned_at) - new Date(b.pinned_at);
@@ -28,17 +28,17 @@ function Notes({ token }) {
         setNotes(sorted);
       })
       .catch((err) => setError(err.message));
-  }, [token]);
+  }, []);
 
-  // Create a new note
+  // Create note
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await fetch("http://localhost:8000/notes/", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ title: newTitle, content: newNote }),
       });
@@ -52,12 +52,12 @@ function Notes({ token }) {
     }
   };
 
-  // Delete a note
+  // Delete note
   const handleDelete = async (id) => {
     try {
       const res = await fetch(`http://localhost:8000/notes/${id}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: "include",
       });
       if (!res.ok) throw new Error("Delete failed");
       setNotes((prev) => prev.filter((n) => n.id !== id));
@@ -66,12 +66,12 @@ function Notes({ token }) {
     }
   };
 
-  // Toggle pin status
+  // Pin/unpin note
   const togglePin = async (id) => {
     try {
       const res = await fetch(`http://localhost:8000/notes/${id}/pin`, {
         method: "PATCH",
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: "include",
       });
       if (!res.ok) throw new Error("Pin toggle failed");
       const updated = await res.json();
@@ -89,9 +89,30 @@ function Notes({ token }) {
     }
   };
 
+  // 🚪 Logout
+  const handleLogout = async () => {
+    try {
+      const res = await fetch("http://localhost:8000/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      if (res.ok) {
+        navigate("/login"); // redirect to login page
+      } else {
+        throw new Error("Logout failed");
+      }
+    } catch (err) {
+      setError("Logout error: " + err.message);
+    }
+  };
+
   return (
     <div>
-      <h2>Your Notes</h2>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h2>Your Notes</h2>
+        <button onClick={handleLogout}>Logout</button>
+      </div>
+
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       {/* New Note Form */}

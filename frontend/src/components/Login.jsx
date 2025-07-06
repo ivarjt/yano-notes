@@ -17,6 +17,7 @@ function Login({ onLogin }) {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
+        credentials: "include",
         body: new URLSearchParams({
           username,
           password,
@@ -27,8 +28,6 @@ function Login({ onLogin }) {
         throw new Error("Invalid credentials");
       }
 
-      const data = await response.json();
-      onLogin(data.access_token); 
       navigate("/"); 
     } catch (err) {
       setError("Login failed: " + err.message);
